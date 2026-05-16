@@ -9,7 +9,6 @@ import { InteractionForm } from '@/components/InteractionForm'
 import { LifecycleDropdown } from '@/components/LifecycleDropdown'
 import { RelationshipSummaryCard } from '@/components/RelationshipSummaryCard'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
 import { getRelationship } from '@/lib/api'
 import type { Relationship, GraphDataPoint, Signals } from '@/lib/types'
@@ -52,7 +51,7 @@ export default function RelationshipPage({ params }: { params: Promise<{ id: str
           setData(response.data)
           setGraphData(response.data.graphData)
           setCurrentStatus(response.data.relationship.status)
-          
+
           // Generate initial summary based on latest graph data
           if (response.data.graphData.length > 0) {
             const latest = response.data.graphData[response.data.graphData.length - 1]
@@ -80,10 +79,10 @@ export default function RelationshipPage({ params }: { params: Promise<{ id: str
       engagement: signals.engagement
     }
     setGraphData(prev => [...prev, newDataPoint])
-    
+
     // Update relationship summary
     setRelationshipSummary(summary || generateSummaryFromSignals(signals))
-    
+
     toast.success('Interaction recorded successfully!')
   }
 
@@ -93,11 +92,15 @@ export default function RelationshipPage({ params }: { params: Promise<{ id: str
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Navbar />
-        <main className="container mx-auto px-4 py-8 max-w-6xl">
-          <div className="flex justify-center items-center py-16">
-            <Spinner className="h-8 w-8" />
+        <main className="container mx-auto px-4 py-8 max-w-6xl relative z-10">
+          <div className="flex flex-col justify-center items-center py-16 gap-4">
+            <div className="relative">
+              <Spinner className="h-10 w-10 text-primary" />
+              <div className="absolute inset-0 blur-xl bg-primary/30 animate-pulse" />
+            </div>
+            <p className="text-muted-foreground font-mono text-sm tracking-wider uppercase">Loading relationship data...</p>
           </div>
         </main>
       </div>
@@ -106,43 +109,44 @@ export default function RelationshipPage({ params }: { params: Promise<{ id: str
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Navbar />
-        <main className="container mx-auto px-4 py-8 max-w-6xl">
-          <Card className="border-border/50">
-            <CardContent className="py-16 text-center">
-              <p className="text-destructive mb-4">{error || 'Relationship not found'}</p>
-              <Button asChild>
-                <Link href="/dashboard">Return to Dashboard</Link>
-              </Button>
-            </CardContent>
-          </Card>
+        <main className="container mx-auto px-4 py-8 max-w-6xl relative z-10">
+          <div className="glass-card p-16 text-center">
+            <p className="text-destructive mb-4">{error || 'Relationship not found'}</p>
+            <Button asChild className="btn-bio">
+              <Link href="/dashboard">Return to Dashboard</Link>
+            </Button>
+          </div>
         </main>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Navbar />
-      
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
+
+      <main className="container mx-auto px-4 py-8 max-w-6xl relative z-10">
         {/* Header */}
-        <div className="mb-8 animate-fadeIn">
-          <div className="flex items-center gap-2 mb-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/matching">
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                Back to Matches
-              </Link>
-            </Button>
+        <div className="mb-12 animate-fade-in">
+          <div className="flex items-center gap-2 mb-6">
+            <Link href="/matching" className="group inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+              <span>Back to Matches</span>
+            </Link>
           </div>
-          
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Relationship Intelligence
+
+          <div className="flex items-center gap-3 mb-4">
+            <span className="bio-dot bio-dot-teal" />
+            <span className="data-label glow-teal">Relationship Intelligence</span>
+          </div>
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 tracking-tight">
+            <span className="text-foreground">Track Your </span>
+            <span className="text-gradient">Connection</span>
           </h1>
-          <p className="text-muted-foreground">
-            Track and analyze your mentor-startup relationship progress
+          <p className="text-xl text-muted-foreground max-w-2xl">
+            Monitor mentor-startup relationship progress through AI-powered signal extraction
           </p>
         </div>
 
@@ -150,7 +154,7 @@ export default function RelationshipPage({ params }: { params: Promise<{ id: str
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Relationship Overview */}
-            <div className="animate-fadeIn stagger-1">
+            <div className="animate-fade-in delay-100">
               <RelationshipOverview
                 startupName={data.startup.name}
                 mentorName={data.mentor.name}
@@ -161,81 +165,79 @@ export default function RelationshipPage({ params }: { params: Promise<{ id: str
             </div>
 
             {/* Signal Chart */}
-            <Card className="border-border/50 animate-fadeIn stagger-2">
-              <CardHeader>
-                <CardTitle className="text-lg">Relationship Signals</CardTitle>
-                <CardDescription>
-                  Track clarity, uncertainty, and engagement over time
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <SignalChart graphData={graphData} />
-              </CardContent>
-            </Card>
+            <div className="glass-card p-6 hover-glow animate-fade-in delay-200">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="bio-dot bio-dot-violet" />
+                <div>
+                  <h2 className="text-lg font-semibold tracking-wide">Relationship Signals</h2>
+                  <span className="data-label">Track key metrics over time</span>
+                </div>
+              </div>
+              <SignalChart graphData={graphData} />
+            </div>
 
             {/* Interaction Form */}
-            <Card className="border-border/50 animate-fadeIn stagger-3">
-              <CardHeader>
-                <CardTitle className="text-lg">Log Interaction</CardTitle>
-                <CardDescription>
-                  Record a meeting summary to extract relationship signals
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <InteractionForm
-                  relationshipId={id}
-                  onSubmitSuccess={handleInteractionSubmit}
-                />
-              </CardContent>
-            </Card>
+            <div className="glass-card p-6 hover-glow animate-fade-in delay-300">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="bio-dot bio-dot-amber" />
+                <div>
+                  <h2 className="text-lg font-semibold tracking-wide">Log Interaction</h2>
+                  <span className="data-label">Extract signals from meeting notes</span>
+                </div>
+              </div>
+              <InteractionForm
+                relationshipId={id}
+                onSubmitSuccess={handleInteractionSubmit}
+              />
+            </div>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Lifecycle Status */}
-            <Card className="border-border/50 animate-fadeIn stagger-2">
-              <CardHeader>
-                <CardTitle className="text-lg">Lifecycle Status</CardTitle>
-                <CardDescription>
-                  Update the relationship stage
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <LifecycleDropdown
-                  currentStatus={currentStatus}
-                  relationshipId={id}
-                  onStatusChange={handleStatusChange}
-                />
-              </CardContent>
-            </Card>
+            <div className="glass-card p-6 hover-glow animate-fade-in delay-200">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="bio-dot bio-dot-teal" />
+                <div>
+                  <h2 className="text-lg font-semibold tracking-wide">Lifecycle Status</h2>
+                  <span className="data-label">Update relationship stage</span>
+                </div>
+              </div>
+              <LifecycleDropdown
+                currentStatus={currentStatus}
+                relationshipId={id}
+                onStatusChange={handleStatusChange}
+              />
+            </div>
 
             {/* Relationship Summary */}
             {relationshipSummary && (
-              <div className="animate-fadeIn stagger-3">
+              <div className="animate-fade-in delay-300">
                 <RelationshipSummaryCard summary={relationshipSummary} />
               </div>
             )}
 
             {/* Mentor Info */}
-            <Card className="border-border/50 animate-fadeIn stagger-4">
-              <CardHeader>
-                <CardTitle className="text-lg">Mentor Profile</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+            <div className="glass-card p-6 hover-glow animate-fade-in delay-400">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="bio-dot bio-dot-violet" />
+                <h2 className="text-lg font-semibold tracking-wide">Mentor Profile</h2>
+              </div>
+              <div className="space-y-4">
                 <div>
-                  <span className="text-sm text-muted-foreground">Name</span>
-                  <p className="font-medium">{data.mentor.name}</p>
+                  <span className="data-label mb-1 block">Name</span>
+                  <p className="font-medium text-foreground">{data.mentor.name}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-muted-foreground">Expertise</span>
-                  <p className="font-medium">{data.mentor.expertise.join(', ')}</p>
+                  <span className="data-label mb-1 block">Expertise</span>
+                  <p className="font-medium text-foreground">{data.mentor.expertise.join(', ')}</p>
                 </div>
                 <div>
-                  <span className="text-sm text-muted-foreground">Availability</span>
-                  <p className="font-medium">{data.mentor.availability}</p>
+                  <span className="data-label mb-1 block">Availability</span>
+                  <p className="font-medium text-foreground">{data.mentor.availability}</p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -245,7 +247,7 @@ export default function RelationshipPage({ params }: { params: Promise<{ id: str
 
 function generateInitialSummary(latest: GraphDataPoint): string {
   const { clarity, uncertainty, engagement } = latest
-  
+
   if (clarity >= 7 && uncertainty <= 4 && engagement >= 7) {
     return 'Relationship shows strong progress with high clarity and engagement.'
   } else if (clarity >= 5 && engagement >= 5) {
@@ -257,7 +259,7 @@ function generateInitialSummary(latest: GraphDataPoint): string {
 
 function generateSummaryFromSignals(signals: Signals): string {
   const { clarity, uncertainty, engagement } = signals
-  
+
   if (clarity >= 8 && engagement >= 8) {
     return 'Excellent interaction! Strong clarity and engagement observed.'
   } else if (uncertainty >= 7) {
