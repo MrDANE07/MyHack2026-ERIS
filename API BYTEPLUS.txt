@@ -1,0 +1,6 @@
+$env:ANTHROPIC_AUTH_TOKEN = "ark-7192dd63-2b5f-4bcc-b7e1-4767b175cd93-52e93"
+$env:ANTHROPIC_API_KEY = ""
+$env:ANTHROPIC_BASE_URL = "https://ark.ap-southeast.bytepluses.com/api/coding"
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL = "ark-code-latest"
+
+claude --enable-auto-mode --allowedTools "WebSearch" "WebFetch" --dangerously-skip-permissions
