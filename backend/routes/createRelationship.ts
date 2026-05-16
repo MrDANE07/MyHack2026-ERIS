@@ -16,23 +16,21 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     const relationship_id = `REL-${Date.now()}`
-    
-    try {
-      const docRef = await addDoc(collection(db, 'relationships'), {
-        relationship_id,
-        startup_id,
-        mentor_id,
-        compatibility_score,
-        status: 'Created',
-        created_at: Timestamp.now()
-      })
-      
-      res.json({ success: true, relationship_id })
-    } catch (firebaseError) {
-      // If Firebase fails, still return the relationship_id for offline mode
+
+    // Respond immediately — don't block on Firestore
+    res.json({ success: true, data: { relationship_id } })
+
+    // Write to Firestore in the background
+    addDoc(collection(db, 'relationships'), {
+      relationship_id,
+      startup_id,
+      mentor_id,
+      compatibility_score,
+      status: 'Created',
+      created_at: Timestamp.now()
+    }).catch((firebaseError: unknown) => {
       console.warn('Firestore write failed:', firebaseError)
-      res.json({ success: true, relationship_id })
-    }
+    })
   } catch (error) {
     console.error('Error creating relationship:', error)
     res.status(500).json({ success: false, error: 'Failed to create relationship' })

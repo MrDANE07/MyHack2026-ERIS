@@ -107,24 +107,22 @@ router.post('/', async (req: Request, res: Response) => {
       engagement: signals.engagement
     })
 
-    // Save interaction to Firestore (with graceful fallback)
-    try {
-      const interaction_id = `INT-${Date.now()}`
-      await addDoc(collection(db, 'interactions'), {
-        interaction_id,
-        relationship_id,
-        summary,
-        ...signals,
-        created_at: Timestamp.now()
-      })
-    } catch (firebaseError) {
-      console.warn('Failed to save interaction to Firestore:', firebaseError)
-    }
-
+    // Respond immediately — don't block on Firestore
     res.json({
       success: true,
       signals,
       relationship_summary: relationshipSummary
+    })
+
+    // Write to Firestore in the background
+    addDoc(collection(db, 'interactions'), {
+      interaction_id: `INT-${Date.now()}`,
+      relationship_id,
+      summary,
+      ...signals,
+      created_at: Timestamp.now()
+    }).catch((firebaseError: unknown) => {
+      console.warn('Failed to save interaction to Firestore:', firebaseError)
     })
   } catch (error) {
     console.error('Error extracting signals:', error)
