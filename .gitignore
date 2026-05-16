@@ -5,3 +5,9 @@ node_modules
 dist
 .DS_Store
 *.log
+.claude
+.claude.json
+API.json
+API BYTEPLUS.txt
+guideline.md
+Rules & Regulation.docx
