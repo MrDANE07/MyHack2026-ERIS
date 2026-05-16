@@ -1,0 +1,694 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ERIS - Biopunk Deep-Sea Bioluminescence Design System
+   "Like if Figma and a jellyfish had a baby"
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Light Mode - Translucent whites with iridescent accents */
+  --background: 210 30% 96%;
+  --foreground: 220 40% 13%;
+  
+  --card: 0 0% 100% / 0.75;
+  --card-foreground: 220 40% 13%;
+  
+  --popover: 0 0% 100% / 0.9;
+  --popover-foreground: 220 40% 13%;
+  
+  /* Primary - Electric Teal */
+  --primary: 166 100% 50%;
+  --primary-foreground: 220 40% 8%;
+  
+  /* Secondary - Violet Pink */
+  --secondary: 275 100% 69%;
+  --secondary-foreground: 0 0% 100%;
+  
+  /* Accent - Warm Amber */
+  --accent: 38 100% 59%;
+  --accent-foreground: 220 40% 8%;
+  
+  --muted: 210 25% 91%;
+  --muted-foreground: 220 15% 45%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  
+  --border: 210 20% 87%;
+  --input: 210 25% 93%;
+  --ring: 166 100% 45%;
+  
+  --radius: 0.75rem;
+  
+  /* Chart colors */
+  --chart-1: 166 100% 45%;
+  --chart-2: 275 100% 65%;
+  --chart-3: 38 100% 55%;
+  --chart-4: 200 100% 50%;
+  --chart-5: 320 100% 60%;
+  
+  /* Bioluminescent glows - softer for light mode */
+  --glow-teal: 0 0 20px hsla(166, 100%, 50%, 0.35);
+  --glow-violet: 0 0 20px hsla(275, 100%, 69%, 0.35);
+  --glow-sky: 0 0 20px hsla(199, 93%, 60%, 0.35);
+  --glow-rose: 0 0 20px hsla(335, 85%, 65%, 0.35);
+}
+
+.dark {
+  /* Dark Mode - Near-black base with bioluminescent accents */
+  --background: 225 50% 3%;
+  --foreground: 180 20% 92%;
+  
+  --card: 220 45% 6% / 0.6;
+  --card-foreground: 180 20% 92%;
+  
+  --popover: 220 45% 8%;
+  --popover-foreground: 180 20% 92%;
+  
+  /* Primary - Electric Teal #00FFD1 */
+  --primary: 166 100% 50%;
+  --primary-foreground: 225 50% 5%;
+  
+  /* Secondary - Violet Pink #BF5FFF */
+  --secondary: 275 100% 69%;
+  --secondary-foreground: 0 0% 100%;
+  
+  /* Accent - Warm Amber #FFB830 */
+  --accent: 38 100% 59%;
+  --accent-foreground: 225 50% 5%;
+  
+  --muted: 220 35% 12%;
+  --muted-foreground: 220 15% 55%;
+  
+  --destructive: 0 90% 55%;
+  --destructive-foreground: 0 0% 100%;
+  
+  --border: 220 30% 15%;
+  --input: 220 35% 10%;
+  --ring: 166 100% 50%;
+  
+  /* Intense glows for dark mode */
+  --glow-teal: 0 0 30px hsla(166, 100%, 50%, 0.5), 0 0 60px hsla(166, 100%, 50%, 0.25);
+  --glow-violet: 0 0 30px hsla(275, 100%, 69%, 0.5), 0 0 60px hsla(275, 100%, 69%, 0.25);
+  --glow-sky: 0 0 30px hsla(199, 93%, 60%, 0.5), 0 0 60px hsla(199, 93%, 60%, 0.25);
+  --glow-rose: 0 0 30px hsla(335, 85%, 65%, 0.5), 0 0 60px hsla(335, 85%, 65%, 0.25);
+}
+
+@theme inline {
+  --font-sans: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01";
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLASSMORPHISM CARDS - Frosted alien glass with iridescent borders
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.glass-card {
+  @apply relative overflow-hidden rounded-xl;
+  background: hsla(220, 45%, 8%, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    hsla(166, 100%, 50%, 0.6) 0%,
+    hsla(275, 100%, 69%, 0.4) 50%,
+    hsla(199, 93%, 60%, 0.3) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.glass-card:hover::before {
+  opacity: 1;
+  background: linear-gradient(
+    135deg,
+    hsla(166, 100%, 50%, 0.9) 0%,
+    hsla(275, 100%, 69%, 0.7) 50%,
+    hsla(199, 93%, 60%, 0.5) 100%
+  );
+}
+
+/* Dark mode — explicit override so it beats any :root rule */
+html.dark .glass-card {
+  background: hsla(220, 45%, 8%, 0.72);
+}
+
+html.dark .glass-card::before {
+  background: linear-gradient(
+    135deg,
+    hsla(166, 100%, 50%, 0.6) 0%,
+    hsla(275, 100%, 69%, 0.4) 40%,
+    hsla(199, 93%, 60%, 0.3) 70%,
+    hsla(335, 85%, 65%, 0.25) 100%
+  );
+}
+
+/* Light mode — dark card on light background for contrast */
+html:not(.dark) .glass-card {
+  background: hsla(220, 40%, 12%, 0.88);
+  /* Force light text inside dark cards regardless of OS theme */
+  --foreground: 180 20% 92%;
+  --card-foreground: 180 20% 92%;
+  --muted-foreground: 220 15% 65%;
+  color: hsl(180, 20%, 92%);
+}
+
+html:not(.dark) .glass-card::before {
+  background: linear-gradient(
+    135deg,
+    hsla(166, 100%, 50%, 0.55) 0%,
+    hsla(275, 100%, 65%, 0.4) 50%,
+    hsla(199, 93%, 60%, 0.3) 100%
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CORNER BRACKETS - Sharp, functional accent marks
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.bracket-corners {
+  @apply relative;
+}
+
+.bracket-corners::before,
+.bracket-corners::after,
+.bracket-corners > .bracket-bl,
+.bracket-corners > .bracket-tr {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid hsl(var(--primary));
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.bracket-corners::before {
+  content: '';
+  top: -4px;
+  left: -4px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.bracket-corners::after {
+  content: '';
+  bottom: -4px;
+  right: -4px;
+  border-left: none;
+  border-top: none;
+}
+
+.bracket-corners:hover::before,
+.bracket-corners:hover::after,
+.bracket-corners.active::before,
+.bracket-corners.active::after {
+  opacity: 1;
+}
+
+.bracket-corners:hover::before,
+.bracket-corners.active::before {
+  transform: translate(-3px, -3px);
+}
+
+.bracket-corners:hover::after,
+.bracket-corners.active::after {
+  transform: translate(3px, 3px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BIOLUMINESCENT STATUS DOTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.bio-dot {
+  @apply relative inline-flex;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.bio-dot::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  animation: bio-pulse 2.5s ease-in-out infinite;
+}
+
+.bio-dot-teal {
+  background: hsl(166, 100%, 50%);
+  box-shadow: var(--glow-teal);
+}
+
+.bio-dot-teal::before {
+  background: radial-gradient(circle, hsla(166, 100%, 50%, 0.4) 0%, transparent 70%);
+}
+
+.bio-dot-violet {
+  background: hsl(275, 100%, 69%);
+  box-shadow: var(--glow-violet);
+}
+
+.bio-dot-violet::before {
+  background: radial-gradient(circle, hsla(275, 100%, 69%, 0.4) 0%, transparent 70%);
+}
+
+.bio-dot-sky {
+  background: hsl(199, 93%, 60%);
+  box-shadow: var(--glow-sky);
+}
+
+.bio-dot-sky::before {
+  background: radial-gradient(circle, hsla(199, 93%, 60%, 0.4) 0%, transparent 70%);
+}
+
+.bio-dot-rose {
+  background: hsl(335, 85%, 65%);
+  box-shadow: var(--glow-rose);
+}
+
+.bio-dot-rose::before {
+  background: radial-gradient(circle, hsla(335, 85%, 65%, 0.4) 0%, transparent 70%);
+}
+
+@keyframes bio-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLOWING TEXT EFFECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.glow-teal {
+  color: hsl(166, 100%, 50%);
+  text-shadow: 0 0 10px hsla(166, 100%, 50%, 0.7), 0 0 30px hsla(166, 100%, 50%, 0.4);
+}
+
+.glow-violet {
+  color: hsl(275, 100%, 69%);
+  text-shadow: 0 0 10px hsla(275, 100%, 69%, 0.7), 0 0 30px hsla(275, 100%, 69%, 0.4);
+}
+
+.glow-sky {
+  color: hsl(199, 93%, 60%);
+  text-shadow: 0 0 10px hsla(199, 93%, 60%, 0.7), 0 0 30px hsla(199, 93%, 60%, 0.4);
+}
+
+.glow-rose {
+  color: hsl(335, 85%, 65%);
+  text-shadow: 0 0 10px hsla(335, 85%, 65%, 0.7), 0 0 30px hsla(335, 85%, 65%, 0.4);
+}
+
+/* Glow colours are the same in both modes — no overrides needed */
+
+/* Number pulse animation */
+.number-pulse {
+  animation: number-glow 3s ease-in-out infinite;
+}
+
+@keyframes number-glow {
+  0%, 100% {
+    filter: brightness(1);
+    text-shadow: 0 0 10px currentColor;
+  }
+  50% {
+    filter: brightness(1.2);
+    text-shadow: 0 0 20px currentColor, 0 0 40px currentColor;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FROSTED GLASS NAVIGATION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.frosted-nav {
+  background: hsla(225, 50%, 5%, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid hsla(166, 100%, 50%, 0.15);
+}
+
+:root .frosted-nav {
+  background: hsla(0, 0%, 100%, 0.8);
+  border-bottom: 1px solid hsla(166, 100%, 45%, 0.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   IRIDESCENT BUTTONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn-bio {
+  @apply relative px-6 py-3 font-semibold rounded-lg overflow-hidden transition-all duration-300;
+  background: linear-gradient(135deg, hsl(166, 100%, 40%) 0%, hsl(275, 100%, 55%) 100%);
+  color: white;
+  border: none;
+}
+
+.btn-bio::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, hsl(166, 100%, 50%) 0%, hsl(275, 100%, 69%) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-bio:hover::before {
+  opacity: 1;
+}
+
+.btn-bio:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 20px hsla(166, 100%, 50%, 0.5),
+    0 0 40px hsla(275, 100%, 69%, 0.3),
+    0 10px 30px hsla(0, 0%, 0%, 0.3);
+}
+
+.btn-bio span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CIRCUIT TRACE LINES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.circuit-line {
+  @apply relative;
+}
+
+.circuit-line::after {
+  content: '';
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    hsl(166, 100%, 50%) 20%, 
+    hsl(275, 100%, 69%) 50%,
+    hsl(166, 100%, 50%) 80%, 
+    transparent 100%
+  );
+  opacity: 0.4;
+  animation: circuit-flow 3s linear infinite;
+}
+
+@keyframes circuit-flow {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.circuit-line-h::after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 200% 100%;
+}
+
+.circuit-line-v::after {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 1px;
+  height: auto;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    hsl(166, 100%, 50%) 20%, 
+    hsl(275, 100%, 69%) 50%,
+    hsl(166, 100%, 50%) 80%, 
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: circuit-flow-v 3s linear infinite;
+}
+
+@keyframes circuit-flow-v {
+  0% { background-position: 0 -200%; }
+  100% { background-position: 0 200%; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DATA DISPLAY TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.data-label {
+  @apply font-mono text-xs uppercase tracking-widest text-muted-foreground;
+}
+
+.data-value {
+  @apply font-mono text-2xl font-bold tracking-tight;
+}
+
+.data-id {
+  @apply font-mono text-xs text-muted-foreground;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PROGRESS BARS WITH GLOW
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.bio-progress {
+  @apply relative h-2 rounded-full overflow-hidden;
+  background: hsla(220, 30%, 20%, 0.5);
+}
+
+:root .bio-progress {
+  background: hsla(220, 20%, 85%, 0.5);
+}
+
+.bio-progress-fill {
+  @apply h-full rounded-full transition-all duration-700 ease-out;
+  position: relative;
+}
+
+.bio-progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, hsla(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.bio-progress-teal .bio-progress-fill {
+  background: linear-gradient(90deg, hsl(166, 100%, 35%), hsl(166, 100%, 50%));
+  box-shadow: 0 0 15px hsla(166, 100%, 50%, 0.6);
+}
+
+.bio-progress-violet .bio-progress-fill {
+  background: linear-gradient(90deg, hsl(275, 100%, 50%), hsl(275, 100%, 69%));
+  box-shadow: 0 0 15px hsla(275, 100%, 69%, 0.6);
+}
+
+.bio-progress-sky .bio-progress-fill {
+  background: linear-gradient(90deg, hsl(199, 93%, 45%), hsl(199, 93%, 60%));
+  box-shadow: 0 0 15px hsla(199, 93%, 60%, 0.6);
+}
+
+.bio-progress-rose .bio-progress-fill {
+  background: linear-gradient(90deg, hsl(335, 85%, 50%), hsl(335, 85%, 65%));
+  box-shadow: 0 0 15px hsla(335, 85%, 65%, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HOVER EFFECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hover-glow {
+  @apply transition-all duration-300;
+}
+
+.hover-glow:hover {
+  box-shadow: 
+    0 0 20px hsla(166, 100%, 50%, 0.3),
+    0 0 40px hsla(275, 100%, 69%, 0.2);
+  transform: translateY(-2px);
+}
+
+.hover-scale {
+  @apply transition-transform duration-300;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR STYLING
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, hsl(166, 100%, 40%), hsl(275, 100%, 55%));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, hsl(166, 100%, 50%), hsl(275, 100%, 69%));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SELECTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: hsla(166, 100%, 50%, 0.3);
+  color: hsl(var(--foreground));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NOISE TEXTURE OVERLAY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-float { animation: float 20s ease-in-out infinite; }
+.animate-fade-in { animation: fadeIn 0.5s ease-out both; }
+.animate-slide-in { animation: slideIn 0.4s ease-out both; }
+
+/* Stagger delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-900 { animation-delay: 900ms; }
+.delay-1000 { animation-delay: 1000ms; }
+.delay-1100 { animation-delay: 1100ms; }
+.delay-1200 { animation-delay: 1200ms; }
+.delay-1300 { animation-delay: 1300ms; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GRADIENT TEXT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.text-gradient {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg,
+    hsl(166, 100%, 55%) 0%,
+    hsl(275, 100%, 69%) 100%
+  );
+}
+
+.text-gradient-teal-violet {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, 
+    hsl(166, 100%, 50%) 0%, 
+    hsl(275, 100%, 69%) 100%
+  );
+}
