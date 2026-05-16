@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+.claude/
+.claude.json
+*.log
+.next/
+.turbo/
+build/
+coverage/
+.vscode/
+.idea/
+*.swp
+*.swo

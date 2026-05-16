@@ -10,6 +10,9 @@ router.get('/', async (req: Request, res: Response) => {
     let totalRelationships = 0
     let activeRelationships = 0
     let totalInteractions = 0
+    let totalMentors = 0
+    let totalStartups = 0
+    let programmes = 0
     const mentorDomainsCount: Record<string, number> = {}
 
     try {
@@ -26,8 +29,22 @@ router.get('/', async (req: Request, res: Response) => {
       // Get interactions stats
       const interSnapshot = await getDocs(collection(db, 'interactions'))
       totalInteractions = interSnapshot.size
+
+      // Get mentor stats
+      const mentorsSnapshot = await getDocs(collection(db, 'mentors'))
+      totalMentors = mentorsSnapshot.size
+
+      // Get startup stats
+      const startupsSnapshot = await getDocs(collection(db, 'startups'))
+      totalStartups = startupsSnapshot.size
+
+      // Get programme stats
+      const programsSnapshot = await getDocs(collection(db, 'programmes'))
+      programmes = programsSnapshot.size
     } catch (firebaseError) {
       console.warn('Firestore query failed, using defaults:', firebaseError)
+      // Fall back to fake data length
+      totalMentors = mentors.length
     }
 
     // Calculate top mentor domains from static data
@@ -48,7 +65,10 @@ router.get('/', async (req: Request, res: Response) => {
         total_relationships: totalRelationships,
         active_relationships: activeRelationships,
         total_interactions: totalInteractions,
-        top_mentor_domains: topMentorDomains
+        top_mentor_domains: topMentorDomains,
+        totalMentors,
+        totalStartups,
+        programmes
       }
     })
   } catch (error) {

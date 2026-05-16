@@ -191,7 +191,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-2 gap-4">
                 <StatBlock label="Active Mentors" value={stats?.totalMentors || 0} color="teal" />
                 <StatBlock label="Startups" value={stats?.totalStartups || 0} color="violet" />
-                <StatBlock label="Relationships" value={stats?.activeRelationships || 0} color="amber" />
+                <StatBlock label="Relationships" value={stats?.active_relationships || 0} color="amber" />
                 <StatBlock label="Programmes" value={stats?.programmes || 0} color="teal" />
               </div>
             )}

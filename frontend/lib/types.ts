@@ -98,6 +98,9 @@ export interface EcosystemStats {
   active_relationships: number
   total_interactions: number
   top_mentor_domains: string[]
+  totalMentors: number
+  totalStartups: number
+  programmes: number
 }
 
 // API Response Types
