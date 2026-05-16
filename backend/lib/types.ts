@@ -81,3 +81,13 @@ export interface GraphDataPoint {
   uncertainty: number
   engagement: number
 }
+
+export interface EcosystemStats {
+  total_relationships: number
+  active_relationships: number
+  total_interactions: number
+  top_mentor_domains: string[]
+  totalMentors: number
+  totalStartups: number
+  programmes: number
+}
