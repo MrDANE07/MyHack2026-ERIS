@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Users, Building2, Network } from 'lucide-react'
+import { LayoutDashboard, Users, Building2, Network, Info } from 'lucide-react'
 import { ThemeToggle } from './ThemeToggle'
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/matching', label: 'Matching', icon: Users },
   { href: '/programmes', label: 'Programmes', icon: Building2 },
+  { href: '/about', label: 'About', icon: Info },
 ]
 
 export function Navbar() {
@@ -21,7 +22,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-3 group">
             <div className="relative">
-              <Network className="h-8 w-8 text-primary transition-all duration-300 group-hover:drop-shadow-[0_0_12px_hsla(166,100%,50%,0.8)]" />
+              <Network className="h-8 w-8 text-primary transition-all duration-300 group-hover:drop-shadow-[0_0_12px_hsla(156,100%,43%,0.8)]" />
               <div className="absolute inset-0 bg-primary/30 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
             <div className="flex flex-col">
@@ -51,7 +52,7 @@ export function Navbar() {
                     }
                   `}
                 >
-                  <Icon className={`h-4 w-4 transition-all duration-300 ${isActive ? 'drop-shadow-[0_0_8px_hsla(166,100%,50%,0.6)]' : ''}`} />
+                  <Icon className={`h-4 w-4 transition-all duration-300 ${isActive ? 'drop-shadow-[0_0_8px_hsla(156,100%,43%,0.6)]' : ''}`} />
                   <span className="hidden md:inline">{item.label}</span>
                   {isActive && (
                     <span className="absolute -bottom-px left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />

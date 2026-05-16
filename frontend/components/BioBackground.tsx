@@ -9,7 +9,7 @@ export function BioBackground() {
       
       {/* Radial color spots */}
       <div className="absolute inset-0 dark:opacity-100 opacity-30">
-        <div className="absolute top-[10%] left-[15%] w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,_hsla(166,100%,50%,0.12)_0%,_transparent_60%)]" />
+        <div className="absolute top-[10%] left-[15%] w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,_hsla(156,100%,43%,0.12)_0%,_transparent_60%)]" />
         <div className="absolute top-[40%] right-[10%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,_hsla(275,100%,69%,0.1)_0%,_transparent_60%)]" />
         <div className="absolute bottom-[15%] left-[30%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,_hsla(38,100%,59%,0.08)_0%,_transparent_60%)]" />
       </div>
@@ -22,7 +22,7 @@ export function BioBackground() {
           style={{
             top: '8%',
             left: '12%',
-            background: 'radial-gradient(circle, hsla(166, 100%, 50%, 0.25) 0%, transparent 65%)',
+            background: 'radial-gradient(circle, hsla(156, 100%, 43%, 0.25) 0%, transparent 65%)',
             filter: 'blur(40px)',
             animationDuration: '25s',
           }}
@@ -60,7 +60,7 @@ export function BioBackground() {
           style={{
             top: '65%',
             left: '60%',
-            background: 'radial-gradient(circle, hsla(166, 100%, 50%, 0.15) 0%, transparent 65%)',
+            background: 'radial-gradient(circle, hsla(156, 100%, 43%, 0.15) 0%, transparent 65%)',
             filter: 'blur(25px)',
             animationDuration: '22s',
             animationDelay: '-5s',
@@ -86,9 +86,9 @@ export function BioBackground() {
         <defs>
           <linearGradient id="circuit-gradient-1" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="transparent" />
-            <stop offset="20%" stopColor="hsl(166, 100%, 50%)" stopOpacity="0.5" />
+            <stop offset="20%" stopColor="hsl(156, 100%, 43%)" stopOpacity="0.5" />
             <stop offset="50%" stopColor="hsl(275, 100%, 69%)" stopOpacity="0.3" />
-            <stop offset="80%" stopColor="hsl(166, 100%, 50%)" stopOpacity="0.5" />
+            <stop offset="80%" stopColor="hsl(156, 100%, 43%)" stopOpacity="0.5" />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
           <linearGradient id="circuit-gradient-2" x1="0%" y1="0%" x2="0%" y2="100%">

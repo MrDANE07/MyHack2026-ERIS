@@ -13,7 +13,7 @@ export function VerificationBadge({ verified, showLabel = false }: VerificationB
         className={cn(
           'inline-flex items-center gap-1.5 px-2 py-1 rounded-md border text-xs font-mono uppercase tracking-wider',
           'border-primary/50 text-primary bg-primary/10',
-          'shadow-[0_0_10px_hsla(166,100%,50%,0.3)]'
+          'shadow-[0_0_10px_hsla(156,100%,43%,0.3)]'
         )}
       >
         <Shield className="h-3 w-3" />

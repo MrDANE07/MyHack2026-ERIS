@@ -230,7 +230,7 @@ function ActionCard({
   onClick?: (e: React.MouseEvent) => void
 }) {
   const colorClasses = {
-    teal: 'hover:border-[hsl(166,100%,50%)] group-hover:text-[hsl(166,100%,50%)]',
+    teal: 'hover:border-[hsl(156,100%,43%)] group-hover:text-[hsl(156,100%,43%)]',
     violet: 'hover:border-[hsl(275,100%,69%)] group-hover:text-[hsl(275,100%,69%)]',
     amber: 'hover:border-[hsl(38,100%,59%)] group-hover:text-[hsl(38,100%,59%)]'
   }

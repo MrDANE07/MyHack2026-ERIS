@@ -102,10 +102,10 @@ function StatCard({
 }) {
   const colorClasses = {
     teal: {
-      icon: 'text-[hsl(166,100%,50%)]',
+      icon: 'text-[hsl(156,100%,43%)]',
       value: 'glow-teal',
-      border: 'border-[hsl(166,100%,50%)]/20',
-      bg: 'bg-[hsl(166,100%,50%)]/5'
+      border: 'border-[hsl(156,100%,43%)]/20',
+      bg: 'bg-[hsl(156,100%,43%)]/5'
     },
     violet: {
       icon: 'text-[hsl(275,100%,69%)]',

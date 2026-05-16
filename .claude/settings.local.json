@@ -1,15 +1,23 @@
 {
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "ark-7192dd63-2b5f-4bcc-b7e1-4767b175cd93-52e93",
+    "ANTHROPIC_BASE_URL": "https://ark.ap-southeast.bytepluses.com/api/coding",
+    "ANTHROPIC_MODEL": "ark-code-latest"
+  },
   "permissions": {
     "allow": [
       "Bash(npm *)",
-      "Bash(node *)", 
+      "Bash(node *)",
       "Bash(npx *)",
       "Bash(python *)",
       "Bash(uv *)",
       "Bash(curl *)",
       "Bash(git status)",
       "Bash(git diff)",
-      "mcp__firebase__*"
+      "mcp__firebase__*",
+      "Bash(lsof -ti:3000,3002,3003)",
+      "Bash(xargs kill -9)",
+      "Bash(lsof -ti:3000)"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -17,10 +25,5 @@
       "Bash(git reset --hard*)",
       "Bash(sudo *)"
     ]
-  },
-  "env": {
-        "ANTHROPIC_AUTH_TOKEN": "ark-7192dd63-2b5f-4bcc-b7e1-4767b175cd93-52e93",
-        "ANTHROPIC_BASE_URL": "https://ark.ap-southeast.bytepluses.com/api/coding",
-        "ANTHROPIC_MODEL": "ark-code-latest"
-    }
+  }
 }

@@ -17,7 +17,7 @@ export function SignalChart({ graphData }: SignalChartProps) {
   }
 
   const colors = {
-    teal: 'hsl(166, 100%, 50%)',
+    teal: '#00D99A',
     violet: 'hsl(275, 100%, 69%)',
     amber: 'hsl(38, 100%, 59%)',
     grid: 'hsl(var(--border))',
@@ -54,7 +54,7 @@ export function SignalChart({ graphData }: SignalChartProps) {
               border: `1px solid ${colors.border}`,
               borderRadius: '8px',
               fontSize: '14px',
-              boxShadow: '0 0 20px hsla(166, 100%, 50%, 0.1)',
+              boxShadow: '0 0 20px hsla(156, 100%, 43%, 0.1)',
             }}
             labelFormatter={(value) => `Week ${value}`}
           />

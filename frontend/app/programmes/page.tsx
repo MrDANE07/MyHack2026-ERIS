@@ -144,7 +144,7 @@ export default function ProgrammesPage() {
             <TabsList className="mb-6 bg-background/30 border border-border/30 p-1 h-auto">
               <TabsTrigger
                 value="programmes"
-                className="gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-[0_0_20px_rgba(0,255,209,0.4)] transition-all font-mono uppercase tracking-wider text-xs"
+                className="gap-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary data-[state=active]:shadow-[0_0_20px_rgba(0,217,154,0.4)] transition-all font-mono uppercase tracking-wider text-xs"
               >
                 <Building2 className="h-4 w-4" />
                 <span className="hidden sm:inline">Programmes</span>
@@ -332,13 +332,13 @@ function ActionCard({
   color: 'teal' | 'violet' | 'amber'
 }) {
   const colorClasses = {
-    teal: 'hover:border-[hsl(166,100%,50%)] group-hover:text-[hsl(166,100%,50%)] hover:shadow-[0_0_20px_rgba(0,255,209,0.2)]',
+    teal: 'hover:border-[hsl(156,100%,43%)] group-hover:text-[hsl(156,100%,43%)] hover:shadow-[0_0_20px_rgba(0,217,154,0.2)]',
     violet: 'hover:border-[hsl(275,100%,69%)] group-hover:text-[hsl(275,100%,69%)] hover:shadow-[0_0_20px_rgba(191,95,255,0.2)]',
     amber: 'hover:border-[hsl(38,100%,59%)] group-hover:text-[hsl(38,100%,59%)] hover:shadow-[0_0_20px_rgba(255,184,48,0.2)]'
   }
 
   const glowClasses = {
-    teal: 'group-hover:shadow-[0_0_25px_rgba(0,255,209,0.3)]',
+    teal: 'group-hover:shadow-[0_0_25px_rgba(0,217,154,0.3)]',
     violet: 'group-hover:shadow-[0_0_25px_rgba(191,95,255,0.3)]',
     amber: 'group-hover:shadow-[0_0_25px_rgba(255,184,48,0.3)]'
   }
