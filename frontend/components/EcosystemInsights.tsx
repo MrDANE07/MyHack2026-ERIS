@@ -12,17 +12,17 @@ export function EcosystemInsights({
   staticInsights
 }: EcosystemInsightsProps) {
   return (
-    <div className="glass-card hover-glow h-full">
+    <div className="glass-card p-6 hover-glow h-full">
       <div className="flex items-center gap-3 mb-6">
         <div className="relative">
-          <Activity className="h-6 w-6 text-[hsl(335,85%,65%)]" />
-          <div className="absolute inset-0 bg-[hsl(335,85%,65%)]/30 blur-lg" />
+          <Activity className="h-6 w-6 text-accent" />
+          <div className="absolute inset-0 bg-accent/30 blur-lg" />
         </div>
         <div>
           <h2 className="text-lg font-semibold tracking-wide">Ecosystem Intel</h2>
           <span className="data-id">Live Data Feed</span>
         </div>
-        <span className="bio-dot bio-dot-rose ml-auto" />
+        <span className="bio-dot bio-dot-amber ml-auto" />
       </div>
 
       {/* Live Stats */}
@@ -44,7 +44,7 @@ export function EcosystemInsights({
             icon={MessageCircle}
             value={liveStats.total_interactions}
             label="Interactions"
-            color="rose"
+            color="amber"
           />
           <StatCard
             icon={Award}
@@ -98,7 +98,7 @@ function StatCard({
   icon: React.ElementType
   value: number
   label: string
-  color: 'teal' | 'violet' | 'rose'
+  color: 'teal' | 'violet' | 'amber'
 }) {
   const colorClasses = {
     teal: {
@@ -113,11 +113,11 @@ function StatCard({
       border: 'border-[hsl(275,100%,69%)]/20',
       bg: 'bg-[hsl(275,100%,69%)]/5'
     },
-    rose: {
-      icon: 'text-[hsl(335,85%,65%)]',
-      value: 'glow-rose',
-      border: 'border-[hsl(335,85%,65%)]/20',
-      bg: 'bg-[hsl(335,85%,65%)]/5'
+    amber: {
+      icon: 'text-[hsl(38,100%,59%)]',
+      value: 'glow-amber',
+      border: 'border-[hsl(38,100%,59%)]/20',
+      bg: 'bg-[hsl(38,100%,59%)]/5'
     }
   }
 

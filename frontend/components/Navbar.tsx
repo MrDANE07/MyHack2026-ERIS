@@ -37,7 +37,7 @@ export function Navbar() {
             {navItems.map((item) => {
               const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
               const Icon = item.icon
-
+              
               return (
                 <Link
                   key={item.href}
@@ -45,8 +45,8 @@ export function Navbar() {
                   className={`
                     relative flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm
                     transition-all duration-300 bracket-corners
-                    ${isActive
-                      ? 'text-primary bg-primary/10'
+                    ${isActive 
+                      ? 'text-primary bg-primary/10' 
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                     }
                   `}

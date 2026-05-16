@@ -6,13 +6,12 @@ import Link from 'next/link'
 import { Navbar } from '@/components/Navbar'
 import { MatchResultCard } from '@/components/MatchResultCard'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
 import { createRelationship, generateMatches } from '@/lib/api'
 import { startups } from '@/lib/fakeData'
 import type { MatchResult } from '@/lib/types'
 import { toast } from 'sonner'
-import { ArrowLeft, RefreshCw } from 'lucide-react'
+import { ArrowLeft, RefreshCw, Zap, Target, Users, Sparkles } from 'lucide-react'
 
 export default function MatchingPage() {
   const router = useRouter()
@@ -22,7 +21,6 @@ export default function MatchingPage() {
   const [startupId, setStartupId] = useState<string>(startups[0].id)
 
   useEffect(() => {
-    // Check for stored matches from dashboard
     const storedMatches = sessionStorage.getItem('eris_matches')
     const storedStartupId = sessionStorage.getItem('eris_startup_id')
     
@@ -31,7 +29,6 @@ export default function MatchingPage() {
       if (storedStartupId) setStartupId(storedStartupId)
       setIsLoading(false)
     } else {
-      // Generate matches if none stored
       loadMatches()
     }
   }, [])
@@ -79,66 +76,141 @@ export default function MatchingPage() {
   }
 
   const startup = startups.find(s => s.id === startupId) || startups[0]
+  const strongMatches = matches.filter(m => m.compatibility_score >= 80).length
+  const goodMatches = matches.filter(m => m.compatibility_score >= 60 && m.compatibility_score < 80).length
+  const otherMatches = matches.filter(m => m.compatibility_score < 60).length
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Navbar />
       
-      <main className="container mx-auto px-4 py-8 max-w-5xl">
-        {/* Header */}
-        <div className="mb-8 animate-fadeIn">
-          <div className="flex items-center gap-2 mb-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/dashboard">
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                Back to Dashboard
-              </Link>
-            </Button>
+      <main className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Header Section */}
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-6">
+            <Link href="/dashboard">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Back to Dashboard</span>
+              </Button>
+            </Link>
           </div>
           
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">
-                Mentor Matches
-              </h1>
-              <p className="text-muted-foreground">
-                AI-generated compatibility matches for <span className="font-medium text-foreground">{startup.name}</span>
-              </p>
+          <div className="glass-card p-8">
+            <div className="flex flex-wrap items-start justify-between gap-6">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 rounded-lg bg-primary/10">
+                    <Target className="h-6 w-6 text-primary" />
+                  </div>
+                  <h1 className="text-3xl font-bold text-foreground">
+                    Mentor Matches
+                  </h1>
+                </div>
+                <p className="text-muted-foreground text-lg">
+                  AI-generated compatibility analysis for{' '}
+                  <span className="glow-teal font-semibold">{startup.name}</span>
+                </p>
+                <p className="text-sm text-muted-foreground mt-2 font-mono">
+                  STARTUP_ID: {startup.id}
+                </p>
+              </div>
+              
+              <Button
+                onClick={loadMatches}
+                disabled={isLoading}
+                className="btn-bio"
+              >
+                <span className="flex items-center gap-2">
+                  <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+                  Regenerate Matches
+                </span>
+              </Button>
             </div>
-            
-            <Button
-              variant="outline"
-              onClick={loadMatches}
-              disabled={isLoading}
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh Matches
-            </Button>
           </div>
         </div>
 
+        {/* Stats Bar */}
+        {!isLoading && matches.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="glass-card p-5 hover-glow">
+              <div className="flex items-center gap-3">
+                <div className="bio-dot bio-dot-teal" />
+                <div>
+                  <div className="data-label">Total Matches</div>
+                  <div className="text-2xl font-bold glow-teal number-pulse">{matches.length}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="glass-card p-5 hover-glow">
+              <div className="flex items-center gap-3">
+                <Zap className="h-5 w-5 text-primary" />
+                <div>
+                  <div className="data-label">Strong Matches</div>
+                  <div className="text-2xl font-bold text-primary">{strongMatches}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="glass-card p-5 hover-glow">
+              <div className="flex items-center gap-3">
+                <Sparkles className="h-5 w-5 text-secondary" />
+                <div>
+                  <div className="data-label">Good Matches</div>
+                  <div className="text-2xl font-bold text-secondary">{goodMatches}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="glass-card p-5 hover-glow">
+              <div className="flex items-center gap-3">
+                <Users className="h-5 w-5 text-accent" />
+                <div>
+                  <div className="data-label">Other</div>
+                  <div className="text-2xl font-bold text-accent">{otherMatches}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Content */}
         {isLoading ? (
-          <Card className="border-border/50">
-            <CardContent className="py-16 flex flex-col items-center justify-center">
-              <Spinner className="h-8 w-8 mb-4" />
-              <p className="text-muted-foreground">Analyzing compatibility...</p>
-            </CardContent>
-          </Card>
+          <div className="glass-card p-16 flex flex-col items-center justify-center">
+            <div className="relative">
+              <Spinner className="h-12 w-12 text-primary" />
+              <div className="absolute inset-0 blur-xl bg-primary/30 animate-pulse" />
+            </div>
+            <p className="text-muted-foreground mt-6 font-mono text-sm">
+              ANALYZING COMPATIBILITY VECTORS...
+            </p>
+            <div className="bio-progress w-64 mt-4">
+              <div 
+                className="bio-progress-fill bio-progress-teal" 
+                style={{ width: '60%', animation: 'shimmer 1.5s infinite' }}
+              />
+            </div>
+          </div>
         ) : matches.length === 0 ? (
-          <Card className="border-border/50">
-            <CardContent className="py-16 text-center">
-              <p className="text-muted-foreground mb-4">No matches found</p>
-              <Button onClick={loadMatches}>Generate Matches</Button>
-            </CardContent>
-          </Card>
+          <div className="glass-card p-16 text-center">
+            <div className="text-6xl mb-4 opacity-30">🔍</div>
+            <p className="text-muted-foreground mb-6">No matches found in the current dataset</p>
+            <Button onClick={loadMatches} className="btn-bio">
+              <span>Generate Matches</span>
+            </Button>
+          </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-5">
             {matches.map((match, index) => (
               <div
                 key={match.mentor_id}
-                className="animate-fadeIn"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
                 <MatchResultCard
                   mentorName={match.mentor_name}
@@ -155,38 +227,53 @@ export default function MatchingPage() {
           </div>
         )}
 
-        {/* Summary Card */}
+        {/* Summary Section */}
         {!isLoading && matches.length > 0 && (
-          <Card className="mt-8 border-border/50 animate-fadeIn bg-muted/30">
-            <CardHeader>
-              <CardTitle className="text-lg">Match Summary</CardTitle>
-              <CardDescription>
-                Found {matches.length} potential mentors ranked by compatibility
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-chart-3">
-                    {matches.filter(m => m.compatibility_score >= 80).length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">Strong Matches</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-chart-5">
-                    {matches.filter(m => m.compatibility_score >= 60 && m.compatibility_score < 80).length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">Good Matches</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-muted-foreground">
-                    {matches.filter(m => m.compatibility_score < 60).length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">Other Matches</div>
+          <div className="mt-10 glass-card p-6 circuit-line circuit-line-h">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bio-dot bio-dot-violet" />
+              <h3 className="text-lg font-semibold">Match Analysis Summary</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center p-4 rounded-lg bg-primary/5 border border-primary/20">
+                <div className="text-3xl font-bold glow-teal mb-1">{strongMatches}</div>
+                <div className="text-sm text-muted-foreground">Strong Compatibility (80%+)</div>
+                <div className="bio-progress mt-3">
+                  <div 
+                    className="bio-progress-fill bio-progress-teal" 
+                    style={{ width: `${(strongMatches / matches.length) * 100}%` }}
+                  />
                 </div>
               </div>
-            </CardContent>
-          </Card>
+              
+              <div className="text-center p-4 rounded-lg bg-secondary/5 border border-secondary/20">
+                <div className="text-3xl font-bold glow-violet mb-1">{goodMatches}</div>
+                <div className="text-sm text-muted-foreground">Good Compatibility (60-79%)</div>
+                <div className="bio-progress mt-3">
+                  <div 
+                    className="bio-progress-fill bio-progress-violet" 
+                    style={{ width: `${(goodMatches / matches.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+              
+              <div className="text-center p-4 rounded-lg bg-accent/5 border border-accent/20">
+                <div className="text-3xl font-bold glow-amber mb-1">{otherMatches}</div>
+                <div className="text-sm text-muted-foreground">Developing Matches (&lt;60%)</div>
+                <div className="bio-progress mt-3">
+                  <div 
+                    className="bio-progress-fill bio-progress-amber" 
+                    style={{ width: `${(otherMatches / matches.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <p className="text-xs text-muted-foreground mt-6 font-mono text-center">
+              ALGORITHM: MULTI-DIMENSIONAL COMPATIBILITY SCORING v2.1 | CONFIDENCE: HIGH
+            </p>
+          </div>
         )}
       </main>
     </div>

@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from 'sonner'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { BioBackground } from '@/components/BioBackground'
+import { NeuralSporesCanvas } from '@/components/NeuralSporesCanvas'
 import './globals.css'
 
 const spaceGrotesk = Space_Grotesk({ 
@@ -30,14 +31,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="font-sans antialiased min-h-screen bg-background overflow-x-hidden">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
+          enableSystem
           disableTransitionOnChange
         >
           <BioBackground />
+          <NeuralSporesCanvas />
           <div className="noise-overlay" />
           <div className="relative z-10">
             {children}

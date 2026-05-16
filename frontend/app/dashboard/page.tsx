@@ -81,7 +81,7 @@ export default function DashboardPage() {
         {/* Two-column card grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Startup Profile Card */}
-          <div className="glass-card p-6 hover-glow animate-fade-in" style={{ animationDelay: '1000ms' }}>
+          <div className="glass-card p-6 hover-glow animate-fade-in delay-100">
             <div className="flex items-center gap-3 mb-6">
               <div className="relative">
                 <Cpu className="h-6 w-6 text-primary" />
@@ -134,7 +134,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Actions Card */}
-          <div className="glass-card hover-glow animate-fade-in" style={{ animationDelay: '1100ms' }}>
+          <div className="glass-card p-6 hover-glow animate-fade-in delay-200">
             <div className="flex items-center gap-3 mb-6">
               <div className="relative">
                 <Activity className="h-6 w-6 text-secondary" />
@@ -170,13 +170,13 @@ export default function DashboardPage() {
                 description="View real-time ecosystem analytics and trends"
                 href="/dashboard"
                 icon={<Activity className="h-5 w-5" />}
-                color="sky"
+                color="amber"
               />
             </div>
           </div>
 
           {/* Stats Cards */}
-          <div className="glass-card hover-glow animate-fade-in" style={{ animationDelay: '1200ms' }}>
+          <div className="glass-card p-6 hover-glow animate-fade-in delay-300">
             <div className="flex items-center gap-3 mb-6">
               <span className="bio-dot bio-dot-violet" />
               <h2 className="text-lg font-semibold tracking-wide">Live Statistics</h2>
@@ -191,14 +191,14 @@ export default function DashboardPage() {
               <div className="grid grid-cols-2 gap-4">
                 <StatBlock label="Active Mentors" value={stats?.totalMentors || 0} color="teal" />
                 <StatBlock label="Startups" value={stats?.totalStartups || 0} color="violet" />
-                <StatBlock label="Relationships" value={stats?.activeRelationships || 0} color="sky" />
+                <StatBlock label="Relationships" value={stats?.activeRelationships || 0} color="amber" />
                 <StatBlock label="Programmes" value={stats?.programmes || 0} color="teal" />
               </div>
             )}
           </div>
 
           {/* Ecosystem Insights */}
-          <div className="animate-fade-in" style={{ animationDelay: '1300ms' }}>
+          <div className="animate-fade-in delay-400">
             <EcosystemInsights
               liveStats={stats || undefined}
               staticInsights={[
@@ -226,13 +226,13 @@ function ActionCard({
   description: string
   href: string
   icon: React.ReactNode
-  color: 'teal' | 'violet' | 'sky'
+  color: 'teal' | 'violet' | 'amber'
   onClick?: (e: React.MouseEvent) => void
 }) {
   const colorClasses = {
     teal: 'hover:border-[hsl(166,100%,50%)] group-hover:text-[hsl(166,100%,50%)]',
     violet: 'hover:border-[hsl(275,100%,69%)] group-hover:text-[hsl(275,100%,69%)]',
-    sky: 'hover:border-[hsl(199,93%,60%)] group-hover:text-[hsl(199,93%,60%)]'
+    amber: 'hover:border-[hsl(38,100%,59%)] group-hover:text-[hsl(38,100%,59%)]'
   }
 
   return (
@@ -255,11 +255,11 @@ function ActionCard({
   )
 }
 
-function StatBlock({ label, value, color }: { label: string; value: number; color: 'teal' | 'violet' | 'sky' }) {
+function StatBlock({ label, value, color }: { label: string; value: number; color: 'teal' | 'violet' | 'amber' }) {
   const colorClasses = {
     teal: 'glow-teal',
     violet: 'glow-violet',
-    sky: 'glow-sky'
+    amber: 'glow-amber'
   }
 
   return (

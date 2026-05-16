@@ -53,8 +53,7 @@
   /* Bioluminescent glows - softer for light mode */
   --glow-teal: 0 0 20px hsla(166, 100%, 50%, 0.35);
   --glow-violet: 0 0 20px hsla(275, 100%, 69%, 0.35);
-  --glow-sky: 0 0 20px hsla(199, 93%, 60%, 0.35);
-  --glow-rose: 0 0 20px hsla(335, 85%, 65%, 0.35);
+  --glow-amber: 0 0 20px hsla(38, 100%, 59%, 0.35);
 }
 
 .dark {
@@ -93,8 +92,7 @@
   /* Intense glows for dark mode */
   --glow-teal: 0 0 30px hsla(166, 100%, 50%, 0.5), 0 0 60px hsla(166, 100%, 50%, 0.25);
   --glow-violet: 0 0 30px hsla(275, 100%, 69%, 0.5), 0 0 60px hsla(275, 100%, 69%, 0.25);
-  --glow-sky: 0 0 30px hsla(199, 93%, 60%, 0.5), 0 0 60px hsla(199, 93%, 60%, 0.25);
-  --glow-rose: 0 0 30px hsla(335, 85%, 65%, 0.5), 0 0 60px hsla(335, 85%, 65%, 0.25);
+  --glow-amber: 0 0 30px hsla(38, 100%, 59%, 0.5), 0 0 60px hsla(38, 100%, 59%, 0.25);
 }
 
 @theme inline {
@@ -143,9 +141,20 @@
     scroll-behavior: smooth;
   }
   
+  html[data-scroll-behavior="smooth"] {
+    scroll-behavior: smooth;
+  }
+  
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "ss01", "ss02", "cv01";
+    /* Vignette & Spotlight - focuses eye on center */
+    background-image: radial-gradient(circle at 50% 0%, hsla(166, 100%, 50%, 0.1), transparent 55%);
+    background-attachment: fixed;
+  }
+  
+  .dark body {
+    background-image: radial-gradient(circle at 50% 0%, hsla(166, 100%, 50%, 0.15), transparent 60%);
   }
 }
 
@@ -172,7 +181,7 @@
     135deg,
     hsla(166, 100%, 50%, 0.6) 0%,
     hsla(275, 100%, 69%, 0.4) 50%,
-    hsla(199, 93%, 60%, 0.3) 100%
+    hsla(38, 100%, 59%, 0.3) 100%
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -188,41 +197,20 @@
     135deg,
     hsla(166, 100%, 50%, 0.9) 0%,
     hsla(275, 100%, 69%, 0.7) 50%,
-    hsla(199, 93%, 60%, 0.5) 100%
+    hsla(38, 100%, 59%, 0.5) 100%
   );
 }
 
-/* Dark mode — explicit override so it beats any :root rule */
-html.dark .glass-card {
-  background: hsla(220, 45%, 8%, 0.72);
+:root .glass-card {
+  background: hsla(0, 0%, 100%, 0.75);
 }
 
-html.dark .glass-card::before {
+:root .glass-card::before {
   background: linear-gradient(
     135deg,
-    hsla(166, 100%, 50%, 0.6) 0%,
-    hsla(275, 100%, 69%, 0.4) 40%,
-    hsla(199, 93%, 60%, 0.3) 70%,
-    hsla(335, 85%, 65%, 0.25) 100%
-  );
-}
-
-/* Light mode — dark card on light background for contrast */
-html:not(.dark) .glass-card {
-  background: hsla(220, 40%, 12%, 0.88);
-  /* Force light text inside dark cards regardless of OS theme */
-  --foreground: 180 20% 92%;
-  --card-foreground: 180 20% 92%;
-  --muted-foreground: 220 15% 65%;
-  color: hsl(180, 20%, 92%);
-}
-
-html:not(.dark) .glass-card::before {
-  background: linear-gradient(
-    135deg,
-    hsla(166, 100%, 50%, 0.55) 0%,
-    hsla(275, 100%, 65%, 0.4) 50%,
-    hsla(199, 93%, 60%, 0.3) 100%
+    hsla(166, 100%, 45%, 0.5) 0%,
+    hsla(275, 100%, 60%, 0.35) 50%,
+    hsla(38, 100%, 50%, 0.25) 100%
   );
 }
 
@@ -317,22 +305,13 @@ html:not(.dark) .glass-card::before {
   background: radial-gradient(circle, hsla(275, 100%, 69%, 0.4) 0%, transparent 70%);
 }
 
-.bio-dot-sky {
-  background: hsl(199, 93%, 60%);
-  box-shadow: var(--glow-sky);
+.bio-dot-amber {
+  background: hsl(38, 100%, 59%);
+  box-shadow: var(--glow-amber);
 }
 
-.bio-dot-sky::before {
-  background: radial-gradient(circle, hsla(199, 93%, 60%, 0.4) 0%, transparent 70%);
-}
-
-.bio-dot-rose {
-  background: hsl(335, 85%, 65%);
-  box-shadow: var(--glow-rose);
-}
-
-.bio-dot-rose::before {
-  background: radial-gradient(circle, hsla(335, 85%, 65%, 0.4) 0%, transparent 70%);
+.bio-dot-amber::before {
+  background: radial-gradient(circle, hsla(38, 100%, 59%, 0.4) 0%, transparent 70%);
 }
 
 @keyframes bio-pulse {
@@ -360,17 +339,25 @@ html:not(.dark) .glass-card::before {
   text-shadow: 0 0 10px hsla(275, 100%, 69%, 0.7), 0 0 30px hsla(275, 100%, 69%, 0.4);
 }
 
-.glow-sky {
-  color: hsl(199, 93%, 60%);
-  text-shadow: 0 0 10px hsla(199, 93%, 60%, 0.7), 0 0 30px hsla(199, 93%, 60%, 0.4);
+.glow-amber {
+  color: hsl(38, 100%, 59%);
+  text-shadow: 0 0 10px hsla(38, 100%, 59%, 0.7), 0 0 30px hsla(38, 100%, 59%, 0.4);
 }
 
-.glow-rose {
-  color: hsl(335, 85%, 65%);
-  text-shadow: 0 0 10px hsla(335, 85%, 65%, 0.7), 0 0 30px hsla(335, 85%, 65%, 0.4);
+:root .glow-teal {
+  color: hsl(166, 100%, 38%);
+  text-shadow: 0 0 8px hsla(166, 100%, 45%, 0.5);
 }
 
-/* Glow colours are the same in both modes — no overrides needed */
+:root .glow-violet {
+  color: hsl(275, 100%, 55%);
+  text-shadow: 0 0 8px hsla(275, 100%, 60%, 0.5);
+}
+
+:root .glow-amber {
+  color: hsl(38, 100%, 45%);
+  text-shadow: 0 0 8px hsla(38, 100%, 50%, 0.5);
+}
 
 /* Number pulse animation */
 .number-pulse {
@@ -555,14 +542,9 @@ html:not(.dark) .glass-card::before {
   box-shadow: 0 0 15px hsla(275, 100%, 69%, 0.6);
 }
 
-.bio-progress-sky .bio-progress-fill {
-  background: linear-gradient(90deg, hsl(199, 93%, 45%), hsl(199, 93%, 60%));
-  box-shadow: 0 0 15px hsla(199, 93%, 60%, 0.6);
-}
-
-.bio-progress-rose .bio-progress-fill {
-  background: linear-gradient(90deg, hsl(335, 85%, 50%), hsl(335, 85%, 65%));
-  box-shadow: 0 0 15px hsla(335, 85%, 65%, 0.6);
+.bio-progress-amber .bio-progress-fill {
+  background: linear-gradient(90deg, hsl(38, 100%, 45%), hsl(38, 100%, 59%));
+  box-shadow: 0 0 15px hsla(38, 100%, 59%, 0.6);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -643,7 +625,6 @@ html:not(.dark) .glass-card::before {
   66% { transform: translate(-20px, 20px) scale(0.95); }
 }
 
-
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -655,8 +636,8 @@ html:not(.dark) .glass-card::before {
 }
 
 .animate-float { animation: float 20s ease-in-out infinite; }
-.animate-fade-in { animation: fadeIn 0.5s ease-out both; }
-.animate-slide-in { animation: slideIn 0.4s ease-out both; }
+.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+.animate-slide-in { animation: slideIn 0.4s ease-out forwards; }
 
 /* Stagger delays */
 .delay-100 { animation-delay: 100ms; }
@@ -664,14 +645,6 @@ html:not(.dark) .glass-card::before {
 .delay-300 { animation-delay: 300ms; }
 .delay-400 { animation-delay: 400ms; }
 .delay-500 { animation-delay: 500ms; }
-.delay-600 { animation-delay: 600ms; }
-.delay-700 { animation-delay: 700ms; }
-.delay-800 { animation-delay: 800ms; }
-.delay-900 { animation-delay: 900ms; }
-.delay-1000 { animation-delay: 1000ms; }
-.delay-1100 { animation-delay: 1100ms; }
-.delay-1200 { animation-delay: 1200ms; }
-.delay-1300 { animation-delay: 1300ms; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GRADIENT TEXT
@@ -679,9 +652,10 @@ html:not(.dark) .glass-card::before {
 
 .text-gradient {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg,
-    hsl(166, 100%, 55%) 0%,
-    hsl(275, 100%, 69%) 100%
+  background-image: linear-gradient(135deg, 
+    hsl(166, 100%, 50%) 0%, 
+    hsl(275, 100%, 69%) 50%, 
+    hsl(38, 100%, 59%) 100%
   );
 }
 
