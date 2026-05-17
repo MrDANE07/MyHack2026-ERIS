@@ -70,7 +70,7 @@ export default function DashboardPage() {
           </div>
           <h1 className="text-5xl md:text-6xl font-bold mb-4 tracking-tight">
             <span className="text-foreground">Welcome to </span>
-            <span className="text-gradient">ERIS</span>
+            <span className="text-gradient-teal-violet">ERIS</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
             Ecosystem Relationship Intelligence System — AI-powered mentor matching 

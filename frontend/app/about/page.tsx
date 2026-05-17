@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Navbar } from '@/components/Navbar'
@@ -198,56 +198,43 @@ export default function AboutPage() {
           </div>
 
           <div className="relative mx-auto" style={{ height: '650px', maxWidth: '600px' }}>
-            {/* SVG for connection lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none">
-              <defs>
-                <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#00D99A" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#BF5FFF" stopOpacity="0.8" />
-                </linearGradient>
-                <linearGradient id="connectionGradientMVP" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#00D99A" stopOpacity="1" />
-                  <stop offset="100%" stopColor="#BF5FFF" stopOpacity="1" />
-                </linearGradient>
-                <filter id="glow">
-                  <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                  <feMerge>
-                    <feMergeNode in="coloredBlur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
+            {/* DIV-based connection lines — same coordinate system as nodes, no SVG mismatch */}
+            {connections.map((conn) => {
+              const fromNode = getNode(conn.from as NodeKey)
+              const toNode = getNode(conn.to as NodeKey)
+              if (!fromNode || !toNode) return null
 
-              {connections.map((conn, idx) => {
-                const fromNode = getNode(conn.from as NodeKey)
-                const toNode = getNode(conn.to as NodeKey)
-                if (!fromNode || !toNode) return null
+              const x1 = fromNode.position.x
+              const y1 = fromNode.position.y
+              const x2 = toNode.position.x
+              const y2 = toNode.position.y
+              const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+              const angle = Math.atan2(y2 - y1, x2 - x1) * (180 / Math.PI)
 
-                return (
-                  <motion.line
-                    key={`${conn.from}-${conn.to}`}
-                    x1={fromNode.position.x}
-                    y1={fromNode.position.y}
-                    x2={toNode.position.x}
-                    y2={toNode.position.y}
-                    stroke={conn.isMVP ? "url(#connectionGradientMVP)" : "url(#connectionGradient)"}
-                    strokeWidth={conn.isMVP ? 3 : 2}
-                    strokeLinecap="round"
-                    filter="url(#glow)"
-                    initial={{ opacity: 0, pathLength: 0 }}
-                    animate={{
-                      opacity: conn.isMVP ? 0.8 : 0.5,
-                      pathLength: 1,
-                      strokeWidth: conn.isMVP ? 3 : hoveredNode === conn.from || hoveredNode === conn.to ? 2.5 : 2
-                    }}
-                    transition={{ delay: conn.delay, duration: 1 }}
-                    style={{
-                      animation: conn.isMVP ? 'pulse-line 2s ease-in-out infinite' : undefined
-                    }}
-                  />
-                )
-              })}
-            </svg>
+              return (
+                <motion.div
+                  key={`${conn.from}-${conn.to}`}
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={{ opacity: conn.isMVP ? 0.8 : 0.5, scaleX: 1 }}
+                  transition={{ delay: conn.delay, duration: 1 }}
+                  style={{
+                    position: 'absolute',
+                    left: x1,
+                    top: y1,
+                    width: length,
+                    height: conn.isMVP ? 3 : 2,
+                    background: conn.isMVP
+                      ? 'linear-gradient(90deg, #00D99A, #BF5FFF)'
+                      : 'linear-gradient(90deg, rgba(0,217,154,0.8), rgba(191,95,255,0.8))',
+                    transform: `rotate(${angle}deg)`,
+                    transformOrigin: '0 50%',
+                    borderRadius: 2,
+                    filter: 'blur(0.5px)',
+                    pointerEvents: 'none',
+                  }}
+                />
+              )
+            })}
 
             {/* Center ERIS Node */}
             <motion.div
@@ -305,47 +292,43 @@ export default function AboutPage() {
 
             {/* Surrounding Nodes */}
             {nodes.map((node) => (
-              <motion.div
+              <div
                 key={node.id}
-                initial={{
-                  opacity: 0,
-                  scale: 0,
-                  x: centerNode.position.x,
-                  y: centerNode.position.y
-                }}
-                animate={{
-                  opacity: node.isMVP ? 1 : hoveredNode === node.id ? 1 : 0.7,
-                  scale: hoveredNode === node.id ? 1.15 : 1,
-                  x: node.position.x,
-                  y: node.position.y
-                }}
-                transition={{ delay: node.delay, duration: 0.6 }}
-                onHoverStart={() => setHoveredNode(node.id)}
-                onHoverEnd={() => setHoveredNode(null)}
-                className="absolute z-10 cursor-pointer"
-                style={{
-                  left: 0,
-                  top: 0,
-                  transform: 'translate(-50%, -50%)'
+                className="absolute z-10 top-0 left-0"
+                style={{ 
+                  left: node.position.x, 
+                  top: node.position.y,
+                  transform: 'translate(-50%, -50%)' 
                 }}
               >
                 <motion.div
-                  animate={hoveredNode === node.id ? {
-                    boxShadow: [
-                      `0 0 20px ${node.glow}`,
-                      `0 0 40px ${node.glow}`,
-                      `0 0 20px ${node.glow}`
-                    ]
-                  } : {
-                    boxShadow: node.isMVP ? `0 0 30px ${node.glow}` : `0 0 15px ${node.glow}`
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{
+                    opacity: node.isMVP ? 1 : hoveredNode === node.id ? 1 : 0.7,
+                    scale: hoveredNode === node.id ? 1.15 : 1,
+                    boxShadow: hoveredNode === node.id
+                      ? [
+                          `0 0 20px ${node.glow}`,
+                          `0 0 40px ${node.glow}`,
+                          `0 0 20px ${node.glow}`
+                        ]
+                      : node.isMVP
+                        ? `0 0 30px ${node.glow}`
+                        : `0 0 15px ${node.glow}`
                   }}
-                  transition={{ duration: 1, repeat: node.isMVP ? Infinity : undefined }}
-                  className="glass-card p-3 min-w-[100px] text-center"
+                  transition={
+                    hoveredNode === node.id
+                      ? { duration: 1 }
+                      : { delay: node.delay, duration: 0.6, repeat: node.isMVP ? Infinity : undefined }
+                  }
+                  className="glass-card p-3 min-w-[100px] text-center cursor-pointer"
                   style={{
                     borderColor: node.color,
                     borderWidth: node.isMVP ? 2 : 1,
                     backgroundColor: node.isMVP ? 'hsla(220, 45%, 8%, 0.8)' : 'hsla(220, 45%, 8%, 0.5)'
                   }}
+                  onHoverStart={() => setHoveredNode(node.id)}
+                  onHoverEnd={() => setHoveredNode(null)}
                 >
                   <div className="text-2xl mb-1">{node.icon}</div>
                   <div
@@ -360,7 +343,7 @@ export default function AboutPage() {
                     </div>
                   )}
                 </motion.div>
-              </motion.div>
+              </div>
             ))}
           </div>
 

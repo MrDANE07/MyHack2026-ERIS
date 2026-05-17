@@ -38,7 +38,7 @@ export function isValidSignals(data: unknown): data is ExtractedSignals {
 }
 
 export async function extractSignals(summary: string): Promise<ExtractedSignals> {
-  const { SIGNAL_EXTRACTION_PROMPT } = await import('./prompts')
+  const { SIGNAL_EXTRACTION_PROMPT } = await import('./prompts.js')
   const prompt = SIGNAL_EXTRACTION_PROMPT(summary)
 
   const result = await model.generateContent(prompt)

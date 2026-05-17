@@ -24,25 +24,51 @@
 
 | Layer | Technology | Explicit Version |
 |---|---|---|
-| Frontend Framework | Next.js App Router | **14.2.x** |
-| Frontend Language | TypeScript | **5.4.x** |
-| Styling | TailwindCSS | **3.4.x** |
+| Frontend Framework | Next.js App Router | **16.2.6** |
+| Frontend Language | TypeScript | **5.7.3** |
+| Styling | TailwindCSS | **4.2.0** |
 | Component Library | shadcn/ui | **latest (2024)** |
-| Charts | Recharts | **2.12.x** |
+| Charts | Recharts | **2.15.0** |
 | Backend Runtime | Node.js | **20 LTS** |
-| Backend Framework | **Express.js** | **4.18.x** |
-| Backend Language | TypeScript (ts-node) | **5.4.x** |
-| Database | Firebase Firestore | **10.x (Web SDK)** |
-| AI Model | **Gemini 3.1** via Google AI Studio | **`gemini-2.5-flash`** |
-| AI Platform | **Google AI Studio** | aistudio.google.com |
+| Backend Framework | **Express.js** | **4.18.0** |
+| Backend Language | TypeScript (ts-node) | **5.4.0** |
+| Database | Firebase Firestore | **10.0.0** |
+| AI Model | **Gemini 3.1** via Google Cloud | **`gemini-3.1-preview`** **`gemini-2.5-flash`** |
+| AI SDK | Google Generative AI | **0.5.0** |
+| AI Platform | **Google Cloud/Vertex AI Studio** | aistudio.google.com |
 | Package Manager | npm | **10.x** |
 
-> ⚠️ **Model string note:** The handbook requires Gemini 3.1 accessed via Google AI Studio. Use `gemini-2.5-flash` as the model string in `backend/lib/gemini.ts`. Verify the exact available model string in Google AI Studio at competition time and update accordingly.
+> ⚠️ **Model string note:** The handbook requires Gemini 3.1 accessed via Google Cloud. Use `gemini-2.5-flash` as the model string in `backend/lib/gemini.ts`. Verify the exact available model string in Google Cloud at competition time and update accordingly.
+
+---
+
+## 1.1.1 Deployment Stack
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| Frontend Hosting | **Vercel** | Hosts Next.js app, CDN, auto-deploys from Git |
+| Backend Hosting | **Google Cloud Run** | Serverless container for Express.js API |
+| Database | Firebase Firestore | NoSQL database for relationships, users, interactions |
+| AI Service | **Google Gemini API** | Signal extraction, match scoring, insights |
+| Container Registry | **Google Artifact Registry** | Stores backend Docker images |
+| CI/CD | **Google Cloud Build** | Builds and deploys backend on push |
+
+**Backend Deployment Flow:**
+1. Push code to repository
+2. Google Cloud Build triggers automatically
+3. Builds Docker image and pushes to Artifact Registry
+4. Deploys latest image to Cloud Run service
+5. Cloud Run endpoint becomes `NEXT_PUBLIC_BACKEND_URL` in frontend environment
+
+**Key Points for Cloud Run:**
+- Backend listens on `0.0.0.0:${PORT}` (automatically set via `$PORT` env variable)
+- CORS origin is configured via `FRONTEND_URL` environment variable (set to Vercel deployment URL)
+- All Firebase and Gemini credentials passed via Cloud Run environment variables
 
 > ⚠️ **Ports:** Frontend runs on `http://localhost:3000`. Backend runs on `http://localhost:3001`. Both must be running simultaneously during development.
 
 **Why these Google technologies?**
-- **Gemini 3.1 (Google AI Studio):** State-of-the-art model with structured JSON output — essential for extracting relationship intelligence signals from free-text interaction summaries. Chosen for strong instruction-following for strict JSON schema compliance.
+- **Gemini 3.1 (Google Cloud):** State-of-the-art model with structured JSON output — essential for extracting relationship intelligence signals from free-text interaction summaries. Chosen for strong instruction-following for strict JSON schema compliance.
 - **Firebase Firestore:** Serverless, horizontally-scalable NoSQL document store. Zero infrastructure overhead, and a document model that maps directly to ERIS's relationship entity architecture.
 
 ---
@@ -61,8 +87,11 @@ The project uses **two separate env files** — one for each service.
 # ─────────────────────────────────────────────
 
 # Development: Express server running locally
-# Production: Replace with your deployed backend URL (e.g. Railway, Render, Fly.io)
+# Production: Replace with your deployed backend URL (e.g. Google Cloud Run)
 NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
+
+# Example production URL:
+# NEXT_PUBLIC_BACKEND_URL=https://eris-backend-xxxxx-uc.a.run.app
 ```
 
 > The frontend does NOT connect to Firebase directly. All Firestore and Gemini operations are handled server-side by the Express backend. The only env var the frontend needs is the backend URL.
@@ -76,7 +105,15 @@ NEXT_PUBLIC_BACKEND_URL=http://localhost:3001
 # EXPRESS SERVER
 # ─────────────────────────────────────────────
 
-PORT=3001
+PORT=3001  # Cloud Run automatically sets $PORT; this is the fallback
+
+# ─────────────────────────────────────────────
+# CORS CONFIGURATION — Frontend Origin
+# ─────────────────────────────────────────────
+
+# Development: http://localhost:3000
+# Production: Your Vercel frontend URL (e.g. https://eris.vercel.app)
+FRONTEND_URL=http://localhost:3000
 
 # ─────────────────────────────────────────────
 # FIREBASE — Server-Side SDK Initialization
@@ -92,10 +129,10 @@ FIREBASE_MESSAGING_SENDER_ID=       # e.g. 123456789012
 FIREBASE_APP_ID=                    # e.g. 1:123456789012:web:abcdef1234567890
 
 # ─────────────────────────────────────────────
-# GOOGLE GEMINI — AI API (via Google AI Studio)
+# GOOGLE GEMINI — AI API (via Google Cloud)
 # ─────────────────────────────────────────────
 
-# Found in: Google AI Studio → API Keys → aistudio.google.com → "Get API key"
+# Found in: Google Cloud → API Keys → aistudio.google.com → "Get API key"
 GEMINI_API_KEY=                     # e.g. AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
@@ -191,19 +228,23 @@ With the frontend/backend separated into distinct folders, Next.js API Routes no
 
 ### CORS Configuration
 
-The Express backend must allow requests from the Next.js frontend. In `backend/server.ts`:
+The Express backend must allow requests from the Next.js frontend. In `backend/server.ts`, the CORS origin is read from the `FRONTEND_URL` environment variable:
 
 ```ts
 import cors from 'cors'
 
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000'
+
 app.use(cors({
-  origin: 'http://localhost:3000',  // Frontend origin
+  origin: FRONTEND_URL,  // Read from env variable
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type']
 }))
 ```
 
-In production, replace `'http://localhost:3000'` with the deployed frontend URL.
+**Local Development:** `FRONTEND_URL=http://localhost:3000`
+
+**Cloud Run Deployment:** Set `FRONTEND_URL` to your Vercel frontend URL (e.g. `https://eris.vercel.app`) via Cloud Run environment variables.
 
 ### API Base URL in Frontend
 
@@ -247,9 +288,11 @@ Gemini API is pay-per-token with no fixed infrastructure cost. ~40,000 API calls
 | Component | MVP (Hackathon) | Production (10k users) |
 |---|---|---|
 | Firebase Firestore | Free tier | ~$50–200/month |
-| Gemini API | Free tier (Google AI Studio) | ~$0.15/1M tokens |
-| Frontend hosting | Vercel free tier | ~$20/month |
-| Backend hosting | Railway / Render free tier | ~$10–20/month |
+| Gemini API | Free tier (Google Cloud) | ~$0.15/1M tokens |
+| Frontend hosting (Vercel) | Free tier | ~$20/month |
+| Backend hosting (Cloud Run) | Free tier (first 2M invocations) | ~$10–50/month |
+| Artifact Registry | Free tier (5 GB storage) | ~$0.10 per GB (storage) |
+| Cloud Build | Free tier (120 build-minutes/day) | ~$0.003 per build-minute |
 | Total | **$0** | **<$300/month** |
 
 **Geographic Scalability**
@@ -1306,7 +1349,7 @@ Expected: `RelationshipOverview` badge updates without page reload.
 
 | Rubric Criterion | How ERIS Addresses It |
 |---|---|
-| **Google Technology Integration (15pts)** | Gemini 3.1 via Google AI Studio (backend) for signal extraction; Firebase Firestore (backend) for runtime state. Both integral — remove either and the core product fails. |
+| **Google Technology Integration (15pts)** | Gemini 3.1 via Google Cloud (backend) for signal extraction; Firebase Firestore (backend) for runtime state. Both integral — remove either and the core product fails. |
 | **AI Implementation Quality (10pts)** | AI is the intelligence core. Ethical AI: bias → configurable scoring weights; hallucination → isValidSignals() schema validation; privacy → PII guidance + scoped Firestore; transparency → natural-language explanations on every score and signal. |
 | **Working Demo & UI/UX (10pts)** | Full 7-step demo flow above. shadcn/ui + Tailwind for polished UI. Dual-server architecture is invisible to the demo judge. |
 | **AI Model Performance (5pts)** | Strict prompt in `backend/lib/prompts.ts` enforces JSON-only output. Schema validation rejects malformed responses. Gemini 3.1 chosen for strong instruction-following. |
@@ -1335,7 +1378,7 @@ intelligence extraction, and lifecycle tracking across programmes and geographie
 - **Frontend:** Next.js 14, TypeScript, TailwindCSS, shadcn/ui, Recharts (port 3000)
 - **Backend:** Express.js 4, TypeScript, Node.js 20 (port 3001)
 - **Database:** Firebase Firestore
-- **AI:** Gemini 3.1 via Google AI Studio
+- **AI:** Gemini 3.1 via Google Cloud
 
 ## Project Structure
 
@@ -1352,7 +1395,7 @@ eris/
 - Node.js 20+
 - npm 10+
 - Firebase project (Firestore enabled)
-- Google AI Studio API key (aistudio.google.com)
+- Google Cloud API key (aistudio.google.com)
 
 ## Setup
 
@@ -1418,7 +1461,7 @@ signals, and reusable across programmes and geographies.
 
 ## Google Technologies Used
 
-**Gemini 3.1 (via Google AI Studio)**
+**Gemini 3.1 (via Google Cloud)**
 Used for: Extracting structured relationship intelligence signals (clarity, uncertainty,
 engagement) from free-text interaction summaries submitted by mentors and startup founders.
 
@@ -1440,7 +1483,7 @@ model maps directly to ERIS's relationship entity architecture.
 
 ## AI Components and Ethical Considerations
 
-**Model:** Gemini 3.1 (`gemini-2.5-flash` via Google AI Studio API, called server-side
+**Model:** Gemini 3.1 (`gemini-2.5-flash` via Google Cloud API, called server-side
 from the Express backend)
 
 **Why it's essential:** Gemini is the intelligence core of ERIS. The product's primary
@@ -1456,7 +1499,7 @@ with a capable LLM. The entire relationship graph is powered by Gemini's structu
 ## Tech Stack and Deployment
 
 **Stack:** Next.js 14 (frontend), Express.js 4 (backend), Firebase Firestore, Gemini 3.1
-via Google AI Studio. Frontend and backend are separate services in one repository.
+via Google Cloud. Frontend and backend are separate services in one repository.
 
 **Deployment:** Frontend → Vercel. Backend → Railway or Render. Both are one-click deploys
 with zero DevOps infrastructure required. Update NEXT_PUBLIC_BACKEND_URL to the deployed
